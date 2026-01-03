@@ -1,6 +1,6 @@
 % Dr. Kaputa
 % Virtual Camera Demo
-% must run matlabStereoServer.py first on the FPGA SoC
+% must run matlabStereoServerVDMA.py first on the FPGA SoC
 
 width = 752;
 height = 480;
@@ -15,7 +15,7 @@ fprintf(1,"Connected to server\n");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % send raw frames
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
-for x = 1:20
+for x = 1:100
 write(client,'0');
 flush(client);
 data = imread('sailboat.jpg');
@@ -46,6 +46,7 @@ else
     write(client,'2');
     flush(client); 
 end
+
 dataLeft = read(client,width*height);   
 temp = reshape(dataLeft,[width,height]);
 leftProcessed = permute(temp,[2 1]);
@@ -53,8 +54,12 @@ dataRight = read(client,width*height);
 temp = reshape(dataRight,[width,height]);
 rightProcessed = permute(temp,[2 1]);
 imagesc(leftProcessed);
-pause(1)
 end
+
+% this write cmd will break out of the zynq server loop
+write(client,'3');
+flush(client); 
+
 t = tiledlayout(1,2, 'Padding', 'none', 'TileSpacing', 'compact'); 
 t.TileSpacing = 'compact';
 t.Padding = 'compact';
