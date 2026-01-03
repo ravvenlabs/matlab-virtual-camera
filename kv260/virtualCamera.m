@@ -6,7 +6,7 @@ width = 752;
 height = 480;
 
 %Initialization Parameters
-server_ip   = '192.168.2.15';     % IP address of the server
+server_ip   = '192.168.1.51';     % IP address of the server
 server_port = 9999;                % Server Port of the sever
 
 client = tcpclient(server_ip,server_port);
@@ -32,6 +32,7 @@ imageStack(:,:,4) = dataGray;
 imageStack(:,:,8) = dataGray;
 imageStack = permute(imageStack,[3 2 1]);
 write(client,imageStack(:));
+disp("hello")
 temp = read(client,1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % receive processed frames
