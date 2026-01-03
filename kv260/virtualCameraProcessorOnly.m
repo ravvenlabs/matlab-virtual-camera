@@ -1,21 +1,21 @@
 % Dr. Kaputa
 % Virtual Camera Demo
-% must run matlabStereoServer.py first on the FPGA SoC
+% must run matlabStereoServerProcessorOnly.py first on the FPGA SoC
 
 width = 752;
 height = 480;
 
 %Initialization Parameters
-server_ip   = '192.168.1.194';     % IP address of the server
+server_ip   = '192.168.1.51';     % IP address of the server
 server_port = 9999;                % Server Port of the sever
 
-client = tcpclient(server_ip,server_port);
+client = tcpclient(server_ip,server_port,"ConnectTimeout", 10, "Timeout", 10);
 fprintf(1,"Connected to server\n");
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % send raw frames
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
-for x = 1:10
+for x = 1:100
 write(client,'0');
 flush(client);
 data = imread('sailboat.jpg');
@@ -32,6 +32,7 @@ imageStack(:,:,4) = dataGray;
 imageStack(:,:,8) = dataGray;
 imageStack = permute(imageStack,[3 2 1]);
 write(client,imageStack(:));
+flush(client); 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % receive processed frames
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
@@ -46,8 +47,11 @@ temp = reshape(dataRight,[width,height]);
 rightProcessed = permute(temp,[2 1]);
 imagesc(leftProcessed);
 x
-%pause(1)
 end
+% this write cmd will break out of the zynq server loop
+write(client,'3');
+flush(client); 
+
 t = tiledlayout(1,2, 'Padding', 'none', 'TileSpacing', 'compact'); 
 t.TileSpacing = 'compact';
 t.Padding = 'compact';
