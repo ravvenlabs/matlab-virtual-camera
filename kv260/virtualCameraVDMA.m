@@ -2,8 +2,11 @@
 % Virtual Camera Demo
 % must run matlabStereoServerVDMA.py first on the FPGA SoC
 
-width = 752;
-height = 480;
+%width = 752;
+%height = 480;
+
+width = 1080;
+height = 720;
 
 %Initialization Parameters
 server_ip   = '192.168.1.51';     % IP address of the server
@@ -19,6 +22,7 @@ for x = 1:100
 write(client,'0');
 flush(client);
 data = imread('sailboat.jpg');
+data = imresize(data, [height width]);
 data = uint8(data);
 
 % mark the image number on the image
@@ -32,12 +36,12 @@ imageStack(:,:,4) = dataGray;
 imageStack(:,:,8) = dataGray;
 imageStack = permute(imageStack,[3 2 1]);
 write(client,imageStack(:));
-disp("hello")
+
 temp = read(client,1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % receive processed frames
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
-if x < 10
+if x < 50
     % receive feedthrough frame
     write(client,'1');
     flush(client);

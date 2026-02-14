@@ -2,8 +2,13 @@
 % Virtual Camera Demo
 % must run matlabStereoServerProcessorOnly.py first on the FPGA SoC
 
-width = 752;
-height = 480;
+%width = 752;
+%height = 480;
+%depth = 8;
+
+width = 1080;
+height = 720;
+depth = 8;
 
 %Initialization Parameters
 server_ip   = '192.168.1.51';     % IP address of the server
@@ -19,13 +24,14 @@ for x = 1:100
 write(client,'0');
 flush(client);
 data = imread('sailboat.jpg');
+data = imresize(data, [height width]);
 data = uint8(data);
 
 % mark the image number on the image
 data = insertText(data,[100 100],x);
 
 dataGray = im2gray(data);
-imageStack = uint8(ones(height,width,8));
+imageStack = uint8(ones(height,width,depth));
 imageStack(:,:,1:3) = data;
 imageStack(:,:,5:7) = data;
 imageStack(:,:,4) = dataGray;
