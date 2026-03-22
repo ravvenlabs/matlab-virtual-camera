@@ -2,11 +2,11 @@
 % Virtual Camera Demo
 % must run matlabStereoServerVDMA.py first on the FPGA SoC
 
-%width = 752;
-%height = 480;
+width = 752;
+height = 480;
 
-width = 1080;
-height = 720;
+%width = 1080;
+%height = 720;
 
 %Initialization Parameters
 server_ip   = '192.168.1.51';     % IP address of the server
